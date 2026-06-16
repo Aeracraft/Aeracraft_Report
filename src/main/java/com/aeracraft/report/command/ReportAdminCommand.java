@@ -89,24 +89,26 @@ public class ReportAdminCommand implements CommandExecutor, TabCompleter {
             UUID reportId = UUID.fromString(reportIdStr);
             plugin.getReportService().getReportById(reportId)
                     .thenAccept(optionalReport -> {
-                        if (optionalReport.isPresent()) {
-                            Report report = optionalReport.get();
-                            sender.sendMessage("=== 举报详情 ===");
-                            sender.sendMessage("ID: " + report.getId());
-                            sender.sendMessage("举报人: " + report.getReporter());
-                            sender.sendMessage("被举报人: " + report.getTarget());
-                            sender.sendMessage("类型: " + report.getType());
-                            sender.sendMessage("状态: " + report.getStatus());
-                            sender.sendMessage("创建时间: " + report.getCreatedAt());
-                            if (report.getHandledBy() != null) {
-                                sender.sendMessage("处理人: " + report.getHandledBy());
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (optionalReport.isPresent()) {
+                                Report report = optionalReport.get();
+                                sender.sendMessage("=== 举报详情 ===");
+                                sender.sendMessage("ID: " + report.getId());
+                                sender.sendMessage("举报人: " + report.getReporter());
+                                sender.sendMessage("被举报人: " + report.getTarget());
+                                sender.sendMessage("类型: " + report.getType());
+                                sender.sendMessage("状态: " + report.getStatus());
+                                sender.sendMessage("创建时间: " + report.getCreatedAt());
+                                if (report.getHandledBy() != null) {
+                                    sender.sendMessage("处理人: " + report.getHandledBy());
+                                }
+                                if (report.getResolutionNote() != null) {
+                                    sender.sendMessage("备注: " + report.getResolutionNote());
+                                }
+                            } else {
+                                sender.sendMessage(plugin.getLanguageManager().getMessage("report.not-found"));
                             }
-                            if (report.getResolutionNote() != null) {
-                                sender.sendMessage("备注: " + report.getResolutionNote());
-                            }
-                        } else {
-                            sender.sendMessage(plugin.getLanguageManager().getMessage("report.not-found"));
-                        }
+                        });
                     });
         } catch (IllegalArgumentException e) {
             sender.sendMessage("无效的举报ID格式");
@@ -124,20 +126,22 @@ public class ReportAdminCommand implements CommandExecutor, TabCompleter {
 
         plugin.getReportService().getAllReports(page, pageSize)
                 .thenAccept(reports -> {
-                    sender.sendMessage("=== 举报列表 (页 " + (page + 1) + ") ===");
-                    if (reports.isEmpty()) {
-                        sender.sendMessage("没有更多举报");
-                        return;
-                    }
-                    for (Report report : reports) {
-                        sender.sendMessage(String.format("[%s] %s -> %s (%s) - %s",
-                                report.getId().toString().substring(0, 8),
-                                report.getReporter(),
-                                report.getTarget(),
-                                report.getType(),
-                                report.getStatus()
-                        ));
-                    }
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        sender.sendMessage("=== 举报列表 (页 " + (page + 1) + ") ===");
+                        if (reports.isEmpty()) {
+                            sender.sendMessage("没有更多举报");
+                            return;
+                        }
+                        for (Report report : reports) {
+                            sender.sendMessage(String.format("[%s] %s -> %s (%s) - %s",
+                                    report.getId().toString().substring(0, 8),
+                                    report.getReporter(),
+                                    report.getTarget(),
+                                    report.getType(),
+                                    report.getStatus()
+                            ));
+                        }
+                    });
                 });
     }
 
@@ -169,7 +173,11 @@ public class ReportAdminCommand implements CommandExecutor, TabCompleter {
                     note,
                     getPlayerIp(player)
             ).thenAccept(v -> {
-                sender.sendMessage(plugin.getLanguageManager().getMessage("admin.report-completed"));
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    if (player.isOnline()) {
+                        sender.sendMessage(plugin.getLanguageManager().getMessage("admin.report-completed"));
+                    }
+                });
             });
         } catch (IllegalArgumentException e) {
             sender.sendMessage("无效的举报ID格式");
@@ -204,7 +212,11 @@ public class ReportAdminCommand implements CommandExecutor, TabCompleter {
                     reason,
                     getPlayerIp(player)
             ).thenAccept(v -> {
-                sender.sendMessage(plugin.getLanguageManager().getMessage("admin.report-rejected"));
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    if (player.isOnline()) {
+                        sender.sendMessage(plugin.getLanguageManager().getMessage("admin.report-rejected"));
+                    }
+                });
             });
         } catch (IllegalArgumentException e) {
             sender.sendMessage("无效的举报ID格式");

@@ -139,20 +139,44 @@ public class ConfigManager {
     }
 
     public Map<String, Integer> getPointsPerReportType() {
-        return config.getConfigurationSection("points.per-type").getValues(false)
+        ConfigurationSection section = config.getConfigurationSection("points.per-type");
+        if (section == null) {
+            return Map.of();
+        }
+        return section.getValues(false)
                 .entrySet().stream()
                 .collect(java.util.stream.Collectors.toMap(
                         e -> e.getKey(),
-                        e -> (Integer) e.getValue()
+                        e -> {
+                            Object value = e.getValue();
+                            if (value instanceof Integer) {
+                                return (Integer) value;
+                            } else if (value instanceof Number) {
+                                return ((Number) value).intValue();
+                            }
+                            return 0;
+                        }
                 ));
     }
 
     public Map<String, Integer> getRewardPerReportType() {
-        return config.getConfigurationSection("rewards.per-type").getValues(false)
+        ConfigurationSection section = config.getConfigurationSection("rewards.per-type");
+        if (section == null) {
+            return Map.of();
+        }
+        return section.getValues(false)
                 .entrySet().stream()
                 .collect(java.util.stream.Collectors.toMap(
                         e -> e.getKey(),
-                        e -> (Integer) e.getValue()
+                        e -> {
+                            Object value = e.getValue();
+                            if (value instanceof Integer) {
+                                return (Integer) value;
+                            } else if (value instanceof Number) {
+                                return ((Number) value).intValue();
+                            }
+                            return 0;
+                        }
                 ));
     }
 
