@@ -114,10 +114,18 @@ public class InventoryListener implements Listener {
                 .thenAccept(reports -> {
                     Inventory inventory = plugin.getReportListGUI()
                             .createInventory(page, reports, null);
-                    player.openInventory(inventory);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.openInventory(inventory);
+                        }
+                    });
                 })
                 .exceptionally(ex -> {
-                    player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
+                        }
+                    });
                     return null;
                 });
     }
@@ -126,7 +134,11 @@ public class InventoryListener implements Listener {
         plugin.getReportService().getReportById(reportId)
                 .thenCompose(optionalReport -> {
                     if (optionalReport.isEmpty()) {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.not-found"));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.not-found"));
+                            }
+                        });
                         return null;
                     }
                     Report report = optionalReport.get();
@@ -135,12 +147,20 @@ public class InventoryListener implements Listener {
                                 Evidence evidence = optionalEvidence.orElse(null);
                                 Inventory inventory = plugin.getReportDetailGUI()
                                         .createInventory(report, evidence);
-                                player.openInventory(inventory);
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        player.openInventory(inventory);
+                                    }
+                                });
                                 return null;
                             });
                 })
                 .exceptionally(ex -> {
-                    player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
+                        }
+                    });
                     return null;
                 });
     }
@@ -230,11 +250,19 @@ public class InventoryListener implements Listener {
         plugin.getReportService().updateReportStatus(reportId, ReportStatus.COMPLETED,
                         player.getName(), "已处理", player.getAddress() != null ? player.getAddress().getAddress().toString() : "unknown")
                 .thenRun(() -> {
-                    player.sendMessage(plugin.getLanguageManager().getMessage("report.completed"));
-                    player.closeInventory();
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("report.completed"));
+                            player.closeInventory();
+                        }
+                    });
                 })
                 .exceptionally(ex -> {
-                    player.sendMessage(plugin.getLanguageManager().getMessage("report.error-updating"));
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-updating"));
+                        }
+                    });
                     return null;
                 });
     }
@@ -243,11 +271,19 @@ public class InventoryListener implements Listener {
         plugin.getReportService().updateReportStatus(reportId, ReportStatus.REJECTED,
                         player.getName(), "已驳回", player.getAddress() != null ? player.getAddress().getAddress().toString() : "unknown")
                 .thenRun(() -> {
-                    player.sendMessage(plugin.getLanguageManager().getMessage("report.rejected"));
-                    player.closeInventory();
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("report.rejected"));
+                            player.closeInventory();
+                        }
+                    });
                 })
                 .exceptionally(ex -> {
-                    player.sendMessage(plugin.getLanguageManager().getMessage("report.error-updating"));
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-updating"));
+                        }
+                    });
                     return null;
                 });
     }
@@ -256,7 +292,11 @@ public class InventoryListener implements Listener {
         plugin.getReportService().getEvidence(reportId)
                 .thenAccept(optionalEvidence -> {
                     if (optionalEvidence.isEmpty()) {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.no-evidence"));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.no-evidence"));
+                            }
+                        });
                         return;
                     }
                     Evidence evidence = optionalEvidence.get();
@@ -272,16 +312,32 @@ public class InventoryListener implements Listener {
                                         evidence.getLocation().getYaw(),
                                         evidence.getLocation().getPitch()
                                 );
-                                player.teleport(location);
-                                player.sendMessage(plugin.getLanguageManager().getMessage("report.teleported"));
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        player.teleport(location);
+                                        player.sendMessage(plugin.getLanguageManager().getMessage("report.teleported"));
+                                    }
+                                });
                             } else {
-                                player.sendMessage(plugin.getLanguageManager().getMessage("report.no-location"));
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        player.sendMessage(plugin.getLanguageManager().getMessage("report.no-location"));
+                                    }
+                                });
                             }
                         } catch (Exception e) {
-                            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
+                            Bukkit.getScheduler().runTask(plugin, () -> {
+                                if (player.isOnline()) {
+                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
+                                }
+                            });
                         }
                     } else {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.no-location"));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.no-location"));
+                            }
+                        });
                     }
                 });
     }
@@ -295,10 +351,18 @@ public class InventoryListener implements Listener {
                     String targetName = optionalReport.get().getTarget();
                     Player target = Bukkit.getPlayer(targetName);
                     if (target != null && target.isOnline()) {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.player-frozen",
-                                java.util.Map.of("player", targetName)));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.player-frozen",
+                                        java.util.Map.of("player", targetName)));
+                            }
+                        });
                     } else {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.player-offline"));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.player-offline"));
+                            }
+                        });
                     }
                 });
     }
@@ -312,9 +376,17 @@ public class InventoryListener implements Listener {
                     String targetName = optionalReport.get().getTarget();
                     Player target = Bukkit.getPlayer(targetName);
                     if (target != null && target.isOnline()) {
-                        player.openInventory(target.getInventory());
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.openInventory(target.getInventory());
+                            }
+                        });
                     } else {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.player-offline"));
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            if (player.isOnline()) {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.player-offline"));
+                            }
+                        });
                     }
                 });
     }
@@ -328,14 +400,18 @@ public class InventoryListener implements Listener {
                     String targetName = optionalReport.get().getTarget();
                     plugin.getReportService().getReportsByTarget(targetName, 0, 10)
                             .thenAccept(reports -> {
-                                if (reports.isEmpty()) {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.no-history"));
-                                } else {
-                                    player.sendMessage("§6" + targetName + " 的历史举报记录:");
-                                    for (Report r : reports) {
-                                        player.sendMessage("§7- #" + r.getId().toString().substring(0, 8) + " [" + r.getStatus() + "]");
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        if (reports.isEmpty()) {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.no-history"));
+                                        } else {
+                                            player.sendMessage("§6" + targetName + " 的历史举报记录:");
+                                            for (Report r : reports) {
+                                                player.sendMessage("§7- #" + r.getId().toString().substring(0, 8) + " [" + r.getStatus() + "]");
+                                            }
+                                        }
                                     }
-                                }
+                                });
                             });
                 });
     }
@@ -349,11 +425,15 @@ public class InventoryListener implements Listener {
                     String targetName = optionalReport.get().getTarget();
                     plugin.getPunishmentProvider().warn(player, targetName, "举报处理 - 警告")
                             .thenAccept(success -> {
-                                if (success) {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.warn-success"));
-                                } else {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.warn-failed"));
-                                }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        if (success) {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.warn-success"));
+                                        } else {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.warn-failed"));
+                                        }
+                                    }
+                                });
                             });
                 });
     }
@@ -367,11 +447,15 @@ public class InventoryListener implements Listener {
                     String targetName = optionalReport.get().getTarget();
                     plugin.getPunishmentProvider().mute(player, targetName, "举报处理 - 禁言", 60)
                             .thenAccept(muteId -> {
-                                if (muteId != null) {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.mute-success"));
-                                } else {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.mute-failed"));
-                                }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        if (muteId != null) {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.mute-success"));
+                                        } else {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.mute-failed"));
+                                        }
+                                    }
+                                });
                             });
                 });
     }
@@ -386,12 +470,18 @@ public class InventoryListener implements Listener {
                     plugin.getPunishmentProvider().ban(player, targetName, "举报处理 - 永久封禁", 0, reportId.toString())
                             .thenAccept(banId -> {
                                 if (banId != null) {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.ban-success"));
                                     plugin.getReportService().linkBanToReport(reportId, banId, player.getName(),
                                             player.getAddress() != null ? player.getAddress().getAddress().toString() : "unknown");
-                                } else {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.ban-failed"));
                                 }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        if (banId != null) {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.ban-success"));
+                                        } else {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.ban-failed"));
+                                        }
+                                    }
+                                });
                             });
                 });
     }
@@ -406,12 +496,18 @@ public class InventoryListener implements Listener {
                     plugin.getPunishmentProvider().tempBan(player, targetName, "举报处理 - 临时封禁", 1440, reportId.toString())
                             .thenAccept(banId -> {
                                 if (banId != null) {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.tempban-success"));
                                     plugin.getReportService().linkBanToReport(reportId, banId, player.getName(),
                                             player.getAddress() != null ? player.getAddress().getAddress().toString() : "unknown");
-                                } else {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.tempban-failed"));
                                 }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        if (banId != null) {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.tempban-success"));
+                                        } else {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.tempban-failed"));
+                                        }
+                                    }
+                                });
                             });
                 });
     }
@@ -425,11 +521,15 @@ public class InventoryListener implements Listener {
                     String targetName = optionalReport.get().getTarget();
                     plugin.getPunishmentProvider().kick(player, targetName, "举报处理 - 踢出")
                             .thenAccept(success -> {
-                                if (success) {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.kick-success"));
-                                } else {
-                                    player.sendMessage(plugin.getLanguageManager().getMessage("report.kick-failed"));
-                                }
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    if (player.isOnline()) {
+                                        if (success) {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.kick-success"));
+                                        } else {
+                                            player.sendMessage(plugin.getLanguageManager().getMessage("report.kick-failed"));
+                                        }
+                                    }
+                                });
                             });
                 });
     }
@@ -441,22 +541,26 @@ public class InventoryListener implements Listener {
                         return;
                     }
                     Evidence evidence = optionalEvidence.get();
-                    if (evidence.getCoreProtectLogs() != null && !evidence.getCoreProtectLogs().isEmpty()) {
-                        player.sendMessage("§6CoreProtect 记录:");
-                        for (com.aeracraft.report.model.Evidence.BlockChange log : evidence.getCoreProtectLogs()) {
-                            String logMessage = String.format("§7- %s %s %s at (%d, %d, %d) in %s",
-                                    log.getPlayer(),
-                                    log.getAction(),
-                                    log.getBlock(),
-                                    log.getX(),
-                                    log.getY(),
-                                    log.getZ(),
-                                    log.getWorld());
-                            player.sendMessage(logMessage);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            if (evidence.getCoreProtectLogs() != null && !evidence.getCoreProtectLogs().isEmpty()) {
+                                player.sendMessage("§6CoreProtect 记录:");
+                                for (com.aeracraft.report.model.Evidence.BlockChange log : evidence.getCoreProtectLogs()) {
+                                    String logMessage = String.format("§7- %s %s %s at (%d, %d, %d) in %s",
+                                            log.getPlayer(),
+                                            log.getAction(),
+                                            log.getBlock(),
+                                            log.getX(),
+                                            log.getY(),
+                                            log.getZ(),
+                                            log.getWorld());
+                                    player.sendMessage(logMessage);
+                                }
+                            } else {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.no-coreprotect"));
+                            }
                         }
-                    } else {
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.no-coreprotect"));
-                    }
+                    });
                 });
     }
 

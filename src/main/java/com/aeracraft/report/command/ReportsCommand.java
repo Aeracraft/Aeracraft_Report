@@ -49,13 +49,21 @@ public class ReportsCommand implements CommandExecutor, TabCompleter {
                     plugin.getLogger().info("成功加载 " + reports.size() + " 条举报记录");
                     org.bukkit.inventory.Inventory inventory = plugin.getReportListGUI()
                             .createInventory(0, reports, null);
-                    player.openInventory(inventory);
-                    plugin.getLogger().info("举报GUI已打开");
+                    org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.openInventory(inventory);
+                            plugin.getLogger().info("举报GUI已打开");
+                        }
+                    });
                 })
                 .exceptionally(ex -> {
                     plugin.getLogger().severe("加载举报列表失败: " + ex.getMessage());
                     ex.printStackTrace();
-                    player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
+                    org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
+                        }
+                    });
                     return null;
                 });
     }
