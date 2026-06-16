@@ -85,8 +85,17 @@ public class ReportRepository {
             stmt.execute(createEvidenceTable);
 
             Bukkit.getLogger().info("数据库表初始化完成");
+            
+            // 检查表是否存在数据
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM aeracraft_reports");
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                Bukkit.getLogger().info("当前数据库中有 " + count + " 条举报记录");
+            }
+            
         } catch (SQLException e) {
             Bukkit.getLogger().log(Level.SEVERE, "初始化数据库表失败", e);
+            throw new RuntimeException("Failed to initialize database tables", e);
         }
     }
 
@@ -263,8 +272,12 @@ public class ReportRepository {
                 while (rs.next()) {
                     reports.add(mapResultSetToReport(rs));
                 }
+                
+                Bukkit.getLogger().info("从数据库查询到 " + reports.size() + " 条举报记录");
 
             } catch (SQLException e) {
+                Bukkit.getLogger().severe("查询所有举报失败: " + e.getMessage());
+                e.printStackTrace();
                 throw new RuntimeException("Failed to find all reports", e);
             }
 

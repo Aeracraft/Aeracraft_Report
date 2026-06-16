@@ -6,6 +6,7 @@ import com.aeracraft.report.command.LanguageCommand;
 import com.aeracraft.report.command.ReportAdminCommand;
 import com.aeracraft.report.command.ReportCommand;
 import com.aeracraft.report.command.ReportsCommand;
+import com.aeracraft.report.command.TestCommand;
 import com.aeracraft.report.config.ConfigManager;
 import com.aeracraft.report.core.EvidenceCollector;
 import com.aeracraft.report.core.PointsManager;
@@ -155,6 +156,7 @@ public class AeracraftReport extends JavaPlugin {
         getCommand("reports").setExecutor(new ReportsCommand(this));
         getCommand("reportadmin").setExecutor(new ReportAdminCommand(this));
         getCommand("language").setExecutor(new LanguageCommand(this));
+        getCommand("testreport").setExecutor(new TestCommand(this));
     }
 
     private void registerListeners() {

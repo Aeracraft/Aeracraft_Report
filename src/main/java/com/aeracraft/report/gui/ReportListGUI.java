@@ -26,6 +26,8 @@ public class ReportListGUI {
         String title = plugin.getLanguageManager().getMessage("gui.report-list-title", Map.of(
                 "page", String.valueOf(page + 1)
         ));
+        plugin.getLogger().info("创建举报列表GUI，标题: " + title + ", 举报数量: " + reports.size());
+        
         Inventory inventory = Bukkit.createInventory(null, 54, title);
 
         int startIndex = page * PAGE_SIZE;
@@ -43,6 +45,7 @@ public class ReportListGUI {
 
         setNavigationItems(inventory, page, reports.size(), filterStatus);
 
+        plugin.getLogger().info("举报列表GUI创建完成");
         return inventory;
     }
 

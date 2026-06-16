@@ -24,6 +24,10 @@ commands:
     description: Change your preferred language
     usage: /<command> [language_code]
     aliases: [lang, locale]
+  testreport:
+    description: Create test report data
+    usage: /<command> <count>
+    permission: aeracraft.report.admin
 
 permissions:
   aeracraft.report.use:

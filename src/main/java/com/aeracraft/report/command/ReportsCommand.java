@@ -41,13 +41,20 @@ public class ReportsCommand implements CommandExecutor, TabCompleter {
     }
 
     private void openReportsGUI(Player player) {
+        plugin.getLogger().info("正在为玩家 " + player.getName() + " 打开举报GUI...");
+        player.sendMessage(plugin.getLanguageManager().getMessage("reports.gui-opening"));
+        
         plugin.getReportService().getAllReports(0, 45)
                 .thenAccept(reports -> {
+                    plugin.getLogger().info("成功加载 " + reports.size() + " 条举报记录");
                     org.bukkit.inventory.Inventory inventory = plugin.getReportListGUI()
                             .createInventory(0, reports, null);
                     player.openInventory(inventory);
+                    plugin.getLogger().info("举报GUI已打开");
                 })
                 .exceptionally(ex -> {
+                    plugin.getLogger().severe("加载举报列表失败: " + ex.getMessage());
+                    ex.printStackTrace();
                     player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
                     return null;
                 });
