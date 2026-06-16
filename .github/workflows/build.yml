@@ -1,0 +1,90 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main, master]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-disabled: true
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Download LiteBansAPI
+        run: |
+          mkdir -p libs
+          curl -L -o libs/LiteBansAPI.jar "https://gitlab.com/-/project/6616503/uploads/38be9759e8c0fbdac74bc1713a735f91/LiteBansAPI.jar"
+
+      - name: Build with Gradle
+        run: ./gradlew clean shadowJar --no-build-cache
+
+      - name: List build outputs
+        run: ls -la build/libs/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AeracraftReport-build
+          path: build/libs/*.jar
+
+      - name: Create tag for branch push
+        if: startsWith(github.ref, 'refs/heads/')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git tag "${{ github.ref_name }}-${{ github.sha }}"
+          git push origin "${{ github.ref_name }}-${{ github.sha }}"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
+          name: Release ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
+          body: |
+            ## AeracraftReport ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}
+
+            ### Downloads
+            - [AeracraftReport.jar](https://github.com/${{ github.repository }}/releases/download/${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('{0}-{1}', github.ref_name, github.sha) }}/AeracraftReport.jar)
+
+            ### Update Content
+            ${{ github.event.head_commit.message }}
+
+            ### Installation Instructions
+            1. Download the jar file
+            2. Place it in the server's `plugins` folder
+            3. Restart the server or use PlugMan to load
+            4. Configure `config.yml` and language files
+          files: |
+            build/libs/*.jar
+          draft: false
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

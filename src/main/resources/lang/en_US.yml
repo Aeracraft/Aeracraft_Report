@@ -1,0 +1,66 @@
+# AeracraftReport English Language File
+
+# General Messages
+command:
+  player-only: "&cThis command can only be executed by a player"
+  no-permission: "&cYou don't have permission to execute this command"
+  reload-success: "&aConfiguration reloaded successfully"
+  reload-failed: "&cFailed to reload configuration"
+
+# Report Messages
+report:
+  success: "&aReport submitted successfully! Report ID: &e{id}"
+  gui-opening: "&eOpening report interface..."
+  player-not-found: "&cPlayer not found: &e{player}"
+  cannot-report-self: "&cYou cannot report yourself"
+  on-cooldown: "&cPlease wait before submitting a new report"
+  daily-limit-reached: "&cYou have reached your daily report limit"
+  not-found: "&cReport not found"
+  new-notify: "&e[New Report] &7Reporter: &f{reporter} &7Target: &f{target} &7Type: &f{type} &7ID: &e{id}"
+  new-notify-cross: "&e[Cross-Server Report] &7From &f{server} &7Reporter: &f{reporter} &7Target: &f{target} &7Type: &f{type} &7ID: &e{id}"
+  pending-notify: "&eYou have &f{count} &epending reports"
+  completed-notify: "&aYour report has been processed | ID: &e{id} | Target: &f{target}"
+  status-change: "&eReport status changed | ID: &e{id} | Status: &f{status} | Handler: &f{handler}"
+  status-change-cross: "&e[Cross-Server Status Change] | ID: &e{id} | Status: &f{status} | Handler: &f{handler}"
+  usage-header: "&6=== Report Command ==="
+  usage-gui: "&e/report gui &7- Open report interface"
+  usage-report: "&e/report <player> [reason] &7- Quickly report a player"
+
+# Status Names
+status:
+  pending: "Pending"
+  in-progress: "In Progress"
+  completed: "Completed"
+  rejected: "Rejected"
+
+# Admin Messages
+admin:
+  config-reloaded: "&aConfiguration reloaded"
+  report-completed: "&aReport marked as completed"
+  report-rejected: "&cReport has been rejected"
+
+# Freeze Messages
+freeze:
+  message: "&aYou have been frozen by an administrator"
+unfreeze:
+  message: "&aYou have been unfrozen"
+
+# Warn Messages
+warn:
+  received: "&c=== Warning ===&r\n&eYou have received a warning\n&7Reason: &f{reason}\n&7From: &f{operator}"
+
+# Language Messages
+language:
+  current: "&7Current language: &f{language}"
+  changed: "&aLanguage changed: &f{language}"
+  available: "&7Available languages:"
+  not-available: "&cUnsupported language code: &e{code}"
+
+# Points Messages
+points:
+  threshold-reached: "&e[System Notice] Player &f{player}'s point score ({points}) has reached the threshold ({threshold})"
+
+# GUI Titles
+gui:
+  report-list-title: "&6Report List &7(Page {page})"
+  report-detail-title: "&6Report Detail &7#{id}"

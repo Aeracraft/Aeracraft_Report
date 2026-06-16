@@ -1,0 +1,102 @@
+# AeracraftReport Configuration
+
+database:
+  type: sqlite  # sqlite or mysql
+  mysql:
+    host: localhost
+    port: 3306
+    database: aeracraft_report
+    username: root
+    password: ""
+    useSSL: false
+    serverTimezone: UTC
+    allowPublicKeyRetrieval: true
+    maxPoolSize: 10
+    minIdle: 2
+
+redis:
+  host: localhost
+  port: 6379
+  password: ""
+  database: 0
+
+server:
+  name: server1
+
+cross-server:
+  enabled: false
+
+report:
+  cooldown-minutes: 5
+  daily-limit: 10
+  bypass-permissions:
+    cooldown: false
+    limit: false
+  types:
+    CHEATING:
+      name: "作弊"
+      description: "使用外挂或作弊程序"
+      icon: DIAMOND_SWORD
+      slot: 0
+    HARASSMENT:
+      name: "辱骂"
+      description: "侮辱、骚扰其他玩家"
+      icon: BLAZE_POWDER
+      slot: 1
+    GRIEFING:
+      name: "破坏"
+      description: "故意破坏他人建筑或财产"
+      icon: TNT
+      slot: 2
+    SPAM:
+      name: "刷屏"
+      description: "发送垃圾信息或刷屏"
+      icon: PAPER
+      slot: 3
+    OTHER:
+      name: "其他"
+      description: "其他违规行为"
+      icon: BOOK
+      slot: 4
+
+coreprotect:
+  query-minutes: 30
+  query-radius: 50
+
+rest-api:
+  enabled: false
+  port: 4567
+  token: "your-secure-token-here"
+  rate-limit: 100
+
+webhook:
+  enabled: false
+  url: ""
+  events:
+    - report_created
+    - report_completed
+    - report_rejected
+
+points:
+  threshold: 100
+  decay-amount: 5
+  decay-interval-days: 7
+  per-type:
+    CHEATING: 10
+    HARASSMENT: 5
+    GRIEFING: 10
+    SPAM: 3
+    OTHER: 2
+
+rewards:
+  per-type:
+    CHEATING: 100
+    HARASSMENT: 50
+    GRIEFING: 100
+    SPAM: 30
+    OTHER: 20
+
+language:
+  default: zh_CN
+  color-code: true
+  prefix: "&6[AeracraftReport] &r"

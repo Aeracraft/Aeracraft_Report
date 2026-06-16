@@ -1,0 +1,66 @@
+# AeracraftReport Chinese (Simplified) Language File
+
+# General Messages
+command:
+  player-only: "&c此命令只能由玩家执行"
+  no-permission: "&c您没有权限执行此命令"
+  reload-success: "&a配置已成功重载"
+  reload-failed: "&c配置重载失败"
+
+# Report Messages
+report:
+  success: "&a举报提交成功！举报单 ID: &e{id}"
+  gui-opening: "&e正在打开举报界面..."
+  player-not-found: "&c找不到玩家: &e{player}"
+  cannot-report-self: "&c您不能举报自己"
+  on-cooldown: "&c请等待后再提交新的举报"
+  daily-limit-reached: "&c您已达到今日举报上限"
+  not-found: "&c未找到该举报"
+  new-notify: "&e[新举报] &7举报人: &f{reporter} &7目标: &f{target} &7类型: &f{type} &7ID: &e{id}"
+  new-notify-cross: "&e[跨服新举报] &7来自 &f{server} &7举报人: &f{reporter} &7目标: &f{target} &7类型: &f{type} &7ID: &e{id}"
+  pending-notify: "&e您有 &f{count} &e条待处理的举报"
+  completed-notify: "&a您的举报已处理完毕 | ID: &e{id} | 目标: &f{target}"
+  status-change: "&e举报状态变更 | ID: &e{id} | 状态: &f{status} | 处理人: &f{handler}"
+  status-change-cross: "&e[跨服状态变更] | ID: &e{id} | 状态: &f{status} | 处理人: &f{handler}"
+  usage-header: "&6=== 举报命令 ==="
+  usage-gui: "&e/report gui &7- 打开举报界面"
+  usage-report: "&e/report <玩家> [原因] &7- 快速举报玩家"
+
+# Status Names
+status:
+  pending: "待处理"
+  in-progress: "处理中"
+  completed: "已完成"
+  rejected: "已驳回"
+
+# Admin Messages
+admin:
+  config-reloaded: "&a配置已重载"
+  report-completed: "&a举报已标记为已完成"
+  report-rejected: "&c举报已被驳回"
+
+# Freeze Messages
+freeze:
+  message: "&a您已被管理员冻结"
+unfreeze:
+  message: "&a您已被解除冻结"
+
+# Warn Messages
+warn:
+  received: "&c=== 警告 ===&r\n&e您收到了一个警告\n&7原因: &f{reason}\n&7发送人: &f{operator}"
+
+# Language Messages
+language:
+  current: "&7当前语言: &f{language}"
+  changed: "&a语言已更改: &f{language}"
+  available: "&7可用语言:"
+  not-available: "&c不支持的语言代码: &e{code}"
+
+# Points Messages
+points:
+  threshold-reached: "&e[系统提示] 玩家 &f{player} &e的污点分数 ({points}) 已达到阈值 ({threshold})"
+
+# GUI Titles
+gui:
+  report-list-title: "&6举报列表 &7(页 {page})"
+  report-detail-title: "&6举报详情 &7#{id}"

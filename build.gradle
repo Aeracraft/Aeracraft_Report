@@ -1,0 +1,83 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.4.2'
+}
+
+group = 'com.aeracraft'
+version = '1.0.1'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.enginehub.org/repo/' }
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url 'https://maven.playpro.com' }
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    // Paper API
+    compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
+
+    // 跨服代理 API
+    compileOnly 'net.md-5:bungeecord-api:1.20-R0.2'
+    compileOnly 'com.velocitypowered:velocity-api:3.3.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:3.3.0-SNAPSHOT'
+
+    // 数据库
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.xerial:sqlite-jdbc:3.44.1.0'
+
+    // Redis
+    implementation 'redis.clients:jedis:5.0.2'
+
+    // REST API
+    implementation 'com.sparkjava:spark-core:2.9.4'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // 工具类
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+
+    // 封禁插件 API（编译时）
+    compileOnly files('libs/LiteBansAPI.jar')
+
+    // CoreProtect API
+    compileOnly 'net.coreprotect:coreprotect:22.4'
+
+    // 经济 API
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+
+    // PlaceholderAPI
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+}
+
+shadowJar {
+    relocate 'com.zaxxer.hikari', 'com.aeracraft.report.libs.hikari'
+    relocate 'redis.clients.jedis', 'com.aeracraft.report.libs.jedis'
+    relocate 'spark', 'com.aeracraft.report.libs.spark'
+    relocate 'com.google.gson', 'com.aeracraft.report.libs.gson'
+    relocate 'org.apache.commons.lang3', 'com.aeracraft.report.libs.commons.lang3'
+    relocate 'org.slf4j', 'com.aeracraft.report.libs.slf4j'
+
+    exclude 'litebans/**'
+
+    archiveFileName = "AeracraftReport-${version}.jar"
+    minimize()
+}
+
+processResources {
+    filesMatching('plugin.yml') {
+        expand 'version': project.version
+    }
+}
+
+tasks.build.dependsOn shadowJar

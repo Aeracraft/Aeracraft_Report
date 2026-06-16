@@ -1,0 +1,79 @@
+name: AeracraftReport
+version: ${version}
+main: com.aeracraft.report.AeracraftReport
+api-version: '1.20'
+author: Aeracraft
+folia-support: true
+description: A production-grade Minecraft report plugin with cross-server support
+website: https://github.com/Aeracraft/AeracraftReport
+
+commands:
+  report:
+    description: Submit a report against a player
+    usage: /<command> [player] [reason]
+    aliases: [r, reportplayer]
+  reports:
+    description: Open the reports management GUI
+    usage: /<command>
+    aliases: [reportlist, rl]
+  reportadmin:
+    description: Admin commands for managing reports
+    usage: /<command> <reload|status|list|complete|reject|teleport|freeze>
+    aliases: [ra, radmin]
+  language:
+    description: Change your preferred language
+    usage: /<command> [language_code]
+    aliases: [lang, locale]
+
+permissions:
+  aeracraft.report.use:
+    description: Allows using the report command
+    default: true
+  aeracraft.report.gui:
+    description: Allows opening the reports GUI
+    default: true
+  aeracraft.report.handle:
+    description: Allows handling reports
+    default: op
+  aeracraft.report.teleport:
+    description: Allows teleporting to report locations
+    default: op
+  aeracraft.report.freeze:
+    description: Allows freezing players
+    default: op
+  aeracraft.report.inventory:
+    description: Allows viewing player inventories
+    default: op
+  aeracraft.report.history:
+    description: Allows viewing player report history
+    default: op
+  aeracraft.report.warn:
+    description: Allows warning players
+    default: op
+  aeracraft.report.mute:
+    description: Allows muting players
+    default: op
+  aeracraft.report.ban:
+    description: Allows banning players
+    default: op
+  aeracraft.report.kick:
+    description: Allows kicking players
+    default: op
+  aeracraft.report.reject:
+    description: Allows rejecting reports
+    default: op
+  aeracraft.report.complete:
+    description: Allows completing reports
+    default: op
+  aeracraft.report.bypass.cooldown:
+    description: Bypass report cooldown
+    default: op
+  aeracraft.report.bypass.limit:
+    description: Bypass daily report limit
+    default: op
+  aeracraft.report.notify:
+    description: Receive report notifications
+    default: op
+  aeracraft.report.admin.reload:
+    description: Allows reloading the plugin configuration
+    default: op

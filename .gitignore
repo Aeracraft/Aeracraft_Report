@@ -1,0 +1,40 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# Gradle
+.gradle/
+build/
+libs/
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
+
+# Java
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+error.txt
+
+# Logs
+*.log
+logs/
+
+# Runtime Generated Files
+*.tmp
+*.temp
+*.cache
+
+# Project Specific
+tps.txt
+config.local.yml
