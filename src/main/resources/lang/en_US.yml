@@ -25,6 +25,29 @@ report:
   usage-header: "&6=== Report Command ==="
   usage-gui: "&e/report gui &7- Open report interface"
   usage-report: "&e/report <player> [reason] &7- Quickly report a player"
+  completed: "&aReport marked as completed"
+  rejected: "&cReport has been rejected"
+  error-updating: "&cFailed to update report status"
+  error-loading: "&cFailed to load report information"
+  no-evidence: "&cNo evidence information for this report"
+  no-location: "&cNo location information for this report"
+  player-frozen: "&aPlayer &f{player} &ahas been frozen"
+  player-offline: "&cPlayer is currently offline"
+  no-history: "&cNo history reports for this player"
+  warn-success: "&aWarning sent successfully"
+  warn-failed: "&cFailed to send warning"
+  mute-success: "&aMute successful"
+  mute-failed: "&cMute failed"
+  ban-success: "&aBan successful"
+  ban-failed: "&cBan failed"
+  tempban-success: "&aTemporary ban successful"
+  tempban-failed: "&cTemporary ban failed"
+  kick-success: "&aKick successful"
+  kick-failed: "&cKick failed"
+  no-coreprotect: "&cNo CoreProtect records"
+
+reports:
+  error-loading: "&cFailed to load report list"
 
 # Status Names
 status:

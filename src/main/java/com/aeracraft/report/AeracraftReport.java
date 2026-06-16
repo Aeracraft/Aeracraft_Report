@@ -52,6 +52,8 @@ public class AeracraftReport extends JavaPlugin {
     private PointsManager pointsManager;
     private PunishmentProvider punishmentProvider;
     private CoreProtectIntegration coreProtectIntegration;
+    private ReportListGUI reportListGUI;
+    private ReportDetailGUI reportDetailGUI;
     private VaultHook vaultHook;
     private RestServer restServer;
     private TaskScheduler taskScheduler;
@@ -129,6 +131,8 @@ public class AeracraftReport extends JavaPlugin {
         evidenceCollector = new EvidenceCollector(this);
         pointsManager = new PointsManager(this);
         taskScheduler = new TaskScheduler(this);
+        reportListGUI = new ReportListGUI(this);
+        reportDetailGUI = new ReportDetailGUI(this);
     }
 
     private boolean initializePunishmentProvider() {
@@ -245,6 +249,14 @@ public class AeracraftReport extends JavaPlugin {
 
     public CoreProtectIntegration getCoreProtectIntegration() {
         return coreProtectIntegration;
+    }
+
+    public ReportListGUI getReportListGUI() {
+        return reportListGUI;
+    }
+
+    public ReportDetailGUI getReportDetailGUI() {
+        return reportDetailGUI;
     }
 
     public VaultHook getVaultHook() {

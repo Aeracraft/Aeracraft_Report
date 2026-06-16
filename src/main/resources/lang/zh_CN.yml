@@ -25,6 +25,29 @@ report:
   usage-header: "&6=== 举报命令 ==="
   usage-gui: "&e/report gui &7- 打开举报界面"
   usage-report: "&e/report <玩家> [原因] &7- 快速举报玩家"
+  completed: "&a举报已标记为已完成"
+  rejected: "&c举报已被驳回"
+  error-updating: "&c更新举报状态失败"
+  error-loading: "&c加载举报信息失败"
+  no-evidence: "&c该举报没有证据信息"
+  no-location: "&c该举报没有位置信息"
+  player-frozen: "&a玩家 &f{player} &a已被冻结"
+  player-offline: "&c玩家当前离线"
+  no-history: "&c该玩家没有历史举报记录"
+  warn-success: "&a警告已发送"
+  warn-failed: "&c发送警告失败"
+  mute-success: "&a禁言成功"
+  mute-failed: "&c禁言失败"
+  ban-success: "&a封禁成功"
+  ban-failed: "&c封禁失败"
+  tempban-success: "&a临时封禁成功"
+  tempban-failed: "&c临时封禁失败"
+  kick-success: "&a踢出成功"
+  kick-failed: "&c踢出失败"
+  no-coreprotect: "&c没有 CoreProtect 记录"
+
+reports:
+  error-loading: "&c加载举报列表失败"
 
 # Status Names
 status:

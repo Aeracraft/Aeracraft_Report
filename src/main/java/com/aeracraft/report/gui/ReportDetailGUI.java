@@ -75,6 +75,12 @@ public class ReportDetailGUI {
         idMeta.setLore(idLore);
         idItem.setItemMeta(idMeta);
         inventory.setItem(2, idItem);
+
+        ItemStack hiddenIdItem = new ItemStack(Material.PAPER);
+        ItemMeta hiddenMeta = hiddenIdItem.getItemMeta();
+        hiddenMeta.setDisplayName("§f" + report.getId().toString());
+        hiddenIdItem.setItemMeta(hiddenMeta);
+        inventory.setItem(53, hiddenIdItem);
     }
 
     private void setActionButtons(Inventory inventory, Report report) {

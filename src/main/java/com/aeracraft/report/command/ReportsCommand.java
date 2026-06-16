@@ -41,7 +41,16 @@ public class ReportsCommand implements CommandExecutor, TabCompleter {
     }
 
     private void openReportsGUI(Player player) {
-        player.sendMessage(plugin.getLanguageManager().getMessage("reports.gui-opening"));
+        plugin.getReportService().getAllReports(0, 45)
+                .thenAccept(reports -> {
+                    org.bukkit.inventory.Inventory inventory = plugin.getReportListGUI()
+                            .createInventory(0, reports, null);
+                    player.openInventory(inventory);
+                })
+                .exceptionally(ex -> {
+                    player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
+                    return null;
+                });
     }
 
     @Override
