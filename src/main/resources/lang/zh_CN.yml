@@ -31,6 +31,7 @@ report:
   error-loading: "&c加载举报信息失败"
   no-evidence: "&c该举报没有证据信息"
   no-location: "&c该举报没有位置信息"
+  teleported: "&a已传送到举报位置"
   player-frozen: "&a玩家 &f{player} &a已被冻结"
   player-offline: "&c玩家当前离线"
   no-history: "&c该玩家没有历史举报记录"
@@ -87,3 +88,4 @@ points:
 gui:
   report-list-title: "&6举报列表 &7(页 {page})"
   report-detail-title: "&6举报详情 &7#{id}"
+  filter-title: "&6举报过滤器"

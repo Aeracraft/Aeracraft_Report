@@ -31,6 +31,7 @@ report:
   error-loading: "&cFailed to load report information"
   no-evidence: "&cNo evidence information for this report"
   no-location: "&cNo location information for this report"
+  teleported: "&aTeleported to report location"
   player-frozen: "&aPlayer &f{player} &ahas been frozen"
   player-offline: "&cPlayer is currently offline"
   no-history: "&cNo history reports for this player"
@@ -87,3 +88,4 @@ points:
 gui:
   report-list-title: "&6Report List &7(Page {page})"
   report-detail-title: "&6Report Detail &7#{id}"
+  filter-title: "&6Report Filter"

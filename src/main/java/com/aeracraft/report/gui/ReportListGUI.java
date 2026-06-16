@@ -136,6 +136,12 @@ public class ReportListGUI {
         refreshMeta.setDisplayName("§a刷新");
         refreshButton.setItemMeta(refreshMeta);
         inventory.setItem(50, refreshButton);
+
+        ItemStack filterButton = new ItemStack(Material.HOPPER);
+        ItemMeta filterMeta = filterButton.getItemMeta();
+        filterMeta.setDisplayName("§6过滤器");
+        filterButton.setItemMeta(filterMeta);
+        inventory.setItem(51, filterButton);
     }
 
     public UUID extractReportIdFromItem(ItemStack item) {

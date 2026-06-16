@@ -16,6 +16,7 @@ import com.aeracraft.report.database.PlayerPreferencesRepository;
 import com.aeracraft.report.database.ReportRepository;
 import com.aeracraft.report.gui.ReportDetailGUI;
 import com.aeracraft.report.gui.ReportListGUI;
+import com.aeracraft.report.gui.FilterGUI;
 import com.aeracraft.report.integration.coreprotect.CoreProtectIntegration;
 import com.aeracraft.report.integration.economy.VaultHook;
 import com.aeracraft.report.integration.placeholder.PAPIExpansion;
@@ -54,6 +55,7 @@ public class AeracraftReport extends JavaPlugin {
     private CoreProtectIntegration coreProtectIntegration;
     private ReportListGUI reportListGUI;
     private ReportDetailGUI reportDetailGUI;
+    private FilterGUI filterGUI;
     private VaultHook vaultHook;
     private RestServer restServer;
     private TaskScheduler taskScheduler;
@@ -133,6 +135,7 @@ public class AeracraftReport extends JavaPlugin {
         taskScheduler = new TaskScheduler(this);
         reportListGUI = new ReportListGUI(this);
         reportDetailGUI = new ReportDetailGUI(this);
+        filterGUI = new FilterGUI(this);
     }
 
     private boolean initializePunishmentProvider() {
@@ -257,6 +260,10 @@ public class AeracraftReport extends JavaPlugin {
 
     public ReportDetailGUI getReportDetailGUI() {
         return reportDetailGUI;
+    }
+
+    public FilterGUI getFilterGUI() {
+        return filterGUI;
     }
 
     public VaultHook getVaultHook() {

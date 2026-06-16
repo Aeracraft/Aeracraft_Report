@@ -39,6 +39,9 @@ public class InventoryListener implements Listener {
         } else if (title.contains("举报详情") || title.contains("Report Detail")) {
             event.setCancelled(true);
             handleReportDetailClick(player, event);
+        } else if (title.contains("过滤器") || title.contains("Filter")) {
+            event.setCancelled(true);
+            handleFilterClick(player, event);
         }
     }
 
@@ -50,30 +53,38 @@ public class InventoryListener implements Listener {
     }
 
     private void handleReportListClick(Player player, InventoryClickEvent event, String title) {
-        int slot = event.getRawSlot();
+        try {
+            int slot = event.getRawSlot();
 
-        if (slot < 0 || slot >= event.getInventory().getSize()) {
-            return;
-        }
-
-        ItemStack item = event.getCurrentItem();
-        if (item == null) {
-            return;
-        }
-
-        if (slot == 45) {
-            navigatePage(player, title, -1);
-        } else if (slot == 53) {
-            navigatePage(player, title, 1);
-        } else if (slot == 49) {
-            player.closeInventory();
-        } else if (slot == 50) {
-            openReportsGUI(player, 0);
-        } else if (slot < 45) {
-            UUID reportId = plugin.getReportListGUI().extractReportIdFromItem(item);
-            if (reportId != null) {
-                openReportDetail(player, reportId);
+            if (slot < 0 || slot >= event.getInventory().getSize()) {
+                return;
             }
+
+            ItemStack item = event.getCurrentItem();
+            if (item == null) {
+                return;
+            }
+
+            if (slot == 45) {
+                navigatePage(player, title, -1);
+            } else if (slot == 53) {
+                navigatePage(player, title, 1);
+            } else if (slot == 49) {
+                player.closeInventory();
+            } else if (slot == 50) {
+                openReportsGUI(player, 0);
+            } else if (slot == 51) {
+                openFilterGUI(player);
+            } else if (slot < 45) {
+                UUID reportId = plugin.getReportListGUI().extractReportIdFromItem(item);
+                if (reportId != null) {
+                    openReportDetail(player, reportId);
+                }
+            }
+        } catch (Exception e) {
+            plugin.getLogger().severe("Error handling report list click: " + e.getMessage());
+            e.printStackTrace();
+            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
         }
     }
 
@@ -135,64 +146,71 @@ public class InventoryListener implements Listener {
     }
 
     private void handleReportDetailClick(Player player, InventoryClickEvent event) {
-        int slot = event.getRawSlot();
+        try {
+            int slot = event.getRawSlot();
 
-        if (slot < 0 || slot >= event.getInventory().getSize()) {
-            return;
-        }
+            if (slot < 0 || slot >= event.getInventory().getSize()) {
+                return;
+            }
 
-        ItemStack item = event.getCurrentItem();
-        if (item == null) {
-            return;
-        }
+            ItemStack item = event.getCurrentItem();
+            if (item == null) {
+                return;
+            }
 
-        String action = plugin.getReportDetailGUI().getButtonAction(item);
-        if (action == null) {
-            return;
-        }
+            String action = plugin.getReportDetailGUI().getButtonAction(item);
+            if (action == null) {
+                return;
+            }
 
-        UUID reportId = extractReportIdFromHiddenItem(event.getInventory());
-        if (reportId == null) {
-            return;
-        }
+            UUID reportId = extractReportIdFromHiddenItem(event.getInventory());
+            if (reportId == null) {
+                player.sendMessage(plugin.getLanguageManager().getMessage("report.not-found"));
+                return;
+            }
 
-        switch (action) {
-            case "COMPLETE":
-                handleCompleteReport(player, reportId);
-                break;
-            case "REJECT":
-                handleRejectReport(player, reportId);
-                break;
-            case "TELEPORT":
-                handleTeleport(player, reportId);
-                break;
-            case "FREEZE":
-                handleFreeze(player, reportId);
-                break;
-            case "INVENTORY":
-                handleViewInventory(player, reportId);
-                break;
-            case "HISTORY":
-                handleViewHistory(player, reportId);
-                break;
-            case "WARN":
-                handleWarn(player, reportId);
-                break;
-            case "MUTE":
-                handleMute(player, reportId);
-                break;
-            case "BAN":
-                handleBan(player, reportId);
-                break;
-            case "TEMPBAN":
-                handleTempBan(player, reportId);
-                break;
-            case "KICK":
-                handleKick(player, reportId);
-                break;
-            case "COREPROTECT":
-                handleCoreProtect(player, reportId);
-                break;
+            switch (action) {
+                case "COMPLETE":
+                    handleCompleteReport(player, reportId);
+                    break;
+                case "REJECT":
+                    handleRejectReport(player, reportId);
+                    break;
+                case "TELEPORT":
+                    handleTeleport(player, reportId);
+                    break;
+                case "FREEZE":
+                    handleFreeze(player, reportId);
+                    break;
+                case "INVENTORY":
+                    handleViewInventory(player, reportId);
+                    break;
+                case "HISTORY":
+                    handleViewHistory(player, reportId);
+                    break;
+                case "WARN":
+                    handleWarn(player, reportId);
+                    break;
+                case "MUTE":
+                    handleMute(player, reportId);
+                    break;
+                case "BAN":
+                    handleBan(player, reportId);
+                    break;
+                case "TEMPBAN":
+                    handleTempBan(player, reportId);
+                    break;
+                case "KICK":
+                    handleKick(player, reportId);
+                    break;
+                case "COREPROTECT":
+                    handleCoreProtect(player, reportId);
+                    break;
+            }
+        } catch (Exception e) {
+            plugin.getLogger().severe("Error handling report detail click: " + e.getMessage());
+            e.printStackTrace();
+            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
         }
     }
 
@@ -243,8 +261,25 @@ public class InventoryListener implements Listener {
                     }
                     Evidence evidence = optionalEvidence.get();
                     if (evidence.getLocation() != null) {
-                        player.teleport(evidence.getLocation());
-                        player.sendMessage(plugin.getLanguageManager().getMessage("report.teleported"));
+                        try {
+                            org.bukkit.World world = Bukkit.getWorld(evidence.getLocation().getWorld());
+                            if (world != null) {
+                                org.bukkit.Location location = new org.bukkit.Location(
+                                        world,
+                                        evidence.getLocation().getX(),
+                                        evidence.getLocation().getY(),
+                                        evidence.getLocation().getZ(),
+                                        evidence.getLocation().getYaw(),
+                                        evidence.getLocation().getPitch()
+                                );
+                                player.teleport(location);
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.teleported"));
+                            } else {
+                                player.sendMessage(plugin.getLanguageManager().getMessage("report.no-location"));
+                            }
+                        } catch (Exception e) {
+                            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
+                        }
                     } else {
                         player.sendMessage(plugin.getLanguageManager().getMessage("report.no-location"));
                     }
@@ -331,8 +366,8 @@ public class InventoryListener implements Listener {
                     }
                     String targetName = optionalReport.get().getTarget();
                     plugin.getPunishmentProvider().mute(player, targetName, "举报处理 - 禁言", 60)
-                            .thenAccept(success -> {
-                                if (success) {
+                            .thenAccept(muteId -> {
+                                if (muteId != null) {
                                     player.sendMessage(plugin.getLanguageManager().getMessage("report.mute-success"));
                                 } else {
                                     player.sendMessage(plugin.getLanguageManager().getMessage("report.mute-failed"));
@@ -408,12 +443,69 @@ public class InventoryListener implements Listener {
                     Evidence evidence = optionalEvidence.get();
                     if (evidence.getCoreProtectLogs() != null && !evidence.getCoreProtectLogs().isEmpty()) {
                         player.sendMessage("§6CoreProtect 记录:");
-                        for (String log : evidence.getCoreProtectLogs()) {
-                            player.sendMessage("§7- " + log);
+                        for (com.aeracraft.report.model.Evidence.BlockChange log : evidence.getCoreProtectLogs()) {
+                            String logMessage = String.format("§7- %s %s %s at (%d, %d, %d) in %s",
+                                    log.getPlayer(),
+                                    log.getAction(),
+                                    log.getBlock(),
+                                    log.getX(),
+                                    log.getY(),
+                                    log.getZ(),
+                                    log.getWorld());
+                            player.sendMessage(logMessage);
                         }
                     } else {
                         player.sendMessage(plugin.getLanguageManager().getMessage("report.no-coreprotect"));
                     }
                 });
+    }
+
+    private void handleFilterClick(Player player, InventoryClickEvent event) {
+        try {
+            int slot = event.getRawSlot();
+
+            if (slot < 0 || slot >= event.getInventory().getSize()) {
+                return;
+            }
+
+            ItemStack item = event.getCurrentItem();
+            if (item == null) {
+                return;
+            }
+
+            if (slot == 22) {
+                player.closeInventory();
+                return;
+            }
+
+            Report.ReportStatus filterStatus = plugin.getFilterGUI().getFilterFromItem(item);
+            if (filterStatus != null) {
+                openFilteredReportsGUI(player, filterStatus);
+            } else {
+                openReportsGUI(player, 0);
+            }
+        } catch (Exception e) {
+            plugin.getLogger().severe("Error handling filter click: " + e.getMessage());
+            e.printStackTrace();
+            player.sendMessage(plugin.getLanguageManager().getMessage("report.error-loading"));
+        }
+    }
+
+    private void openFilteredReportsGUI(Player player, Report.ReportStatus status) {
+        plugin.getReportService().getReportsByStatus(status, 0, 45)
+                .thenAccept(reports -> {
+                    Inventory inventory = plugin.getReportListGUI()
+                            .createInventory(0, reports, status);
+                    player.openInventory(inventory);
+                })
+                .exceptionally(ex -> {
+                    player.sendMessage(plugin.getLanguageManager().getMessage("reports.error-loading"));
+                    return null;
+                });
+    }
+
+    private void openFilterGUI(Player player) {
+        Inventory inventory = plugin.getFilterGUI().createInventory();
+        player.openInventory(inventory);
     }
 }
